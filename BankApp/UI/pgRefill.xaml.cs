@@ -48,7 +48,7 @@ namespace BankApp.UI
         private void cbxMyBills_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentBill = Client.Bills[cbxMyBills.SelectedIndex];
-            tbkBalance.Text = currentBill.Balance.ToString();
+            tbkBalance.Text = "Баланс: " + currentBill.Balance.ToString();
 
             tbkBalance.Visibility = Visibility.Visible;
         }

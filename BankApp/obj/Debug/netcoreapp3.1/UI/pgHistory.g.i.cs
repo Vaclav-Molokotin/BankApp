@@ -61,7 +61,7 @@ namespace BankApp.UI {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BankApp;V1.0.0.0;component/ui/pghistory.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BankApp;component/ui/pghistory.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\UI\pgHistory.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Accounts.txt" />
     <None Remove="Data\Accounts.txt" />
     <None Remove="Resources\Logo.ico" />
     <None Remove="Resources\Logo.png" />
@@ -15,7 +14,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Accounts.txt" />
     <Resource Include="Data\Accounts.txt" />
     <Resource Include="Resources\Assets\Logo.ico" />
     <Resource Include="Resources\Assets\Logo.png" />

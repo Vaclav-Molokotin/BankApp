@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="Главная" Height="450" Width="800"
         Icon="/Resources/Assets/Logo.ico"
-        WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+        WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30*"></ColumnDefinition>

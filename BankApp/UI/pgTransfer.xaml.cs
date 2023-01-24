@@ -118,7 +118,7 @@ namespace BankApp.UI
         private void cbxMyBillsTransfer_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             currentBill = client.Bills[cbxMyBillsTransfer.SelectedIndex];
-            tbBalance.Text = currentBill.Balance.ToString();
+            tbBalance.Text = "Баланс: " + currentBill.Balance.ToString();
 
             tbBalance.Visibility = Visibility.Visible;
         }

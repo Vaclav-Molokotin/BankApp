@@ -57,6 +57,7 @@ namespace BankApp
                         home.Owner = this;
                         home.Show();
                         Hide();
+                        clearData();
                     }
                 }
             }
@@ -66,7 +67,6 @@ namespace BankApp
         {
             tboxLogin.Text = String.Empty;
             pwbxPassword.Password = String.Empty;
-        }
-               
+        }               
     }
 }

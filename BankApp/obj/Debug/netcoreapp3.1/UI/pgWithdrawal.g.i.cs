@@ -93,7 +93,7 @@ namespace BankApp.UI {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BankApp;V1.0.0.0;component/ui/pgwithdrawal.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BankApp;component/ui/pgwithdrawal.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\..\UI\pgWithdrawal.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);
