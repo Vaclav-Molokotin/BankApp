@@ -33,11 +33,6 @@ namespace BankApp.Libs
             DB.Adapter.Fill(DB.Table);
 
             DataRow[] rows = DB.Table.Select();
-            string? column;
-            for(int i = 0; i < rows[0].ItemArray.Length; i++)
-            {
-                column = (string)rows[0].ItemArray[i];
-            }
 
             DB.CloseConnection();
 
