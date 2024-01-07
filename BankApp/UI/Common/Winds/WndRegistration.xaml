@@ -1,0 +1,66 @@
+﻿<Window x:Class="BankApp.UI.Common.Winds.WndRegistration"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BankApp.UI.Common.Winds"
+        mc:Ignorable="d"
+        Title="Банк - Регистрация"
+        
+        Height="550" Width="600"
+        MinHeight="550" MinWidth="600">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"></RowDefinition>            
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label>Регистрация</Label>
+            
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="auto"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" HorizontalAlignment="Right">Имя</TextBlock>
+            <TextBlock Grid.Row="1" HorizontalAlignment="Right">Фамилия</TextBlock>
+            <TextBlock Grid.Row="2" HorizontalAlignment="Right">Отчество</TextBlock>
+            <TextBlock Grid.Row="3" HorizontalAlignment="Right">Логин</TextBlock>
+            <TextBlock Grid.Row="4" HorizontalAlignment="Right">Пароль</TextBlock>
+            <TextBlock Grid.Row="5" HorizontalAlignment="Right">Подтвердить пароль</TextBlock>
+            <TextBlock Grid.Row="6" HorizontalAlignment="Right">Телефон</TextBlock>
+
+            <TextBox x:Name="TbFName" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center"></TextBox>
+            <TextBox x:Name="TbLName" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"></TextBox>
+            <TextBox x:Name="TbMName" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center"></TextBox>
+            <TextBox x:Name="TbLogin" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center" TextChanged="TbLogin_TextChanged"></TextBox>
+            <PasswordBox x:Name="PwbxPassword" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" PasswordChanged="PasswordChanged"></PasswordBox>
+            <PasswordBox x:Name="PwbxConfirmPassword" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" PasswordChanged="PasswordChanged"></PasswordBox>
+            <TextBox x:Name="TbPhone" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Center" TextChanged="TbPhone_TextChanged"></TextBox>
+
+            <TextBlock x:Name="TblFNameError" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Tag="FName"></TextBlock>
+            <TextBlock x:Name="TblLNameError" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" Tag="LName"></TextBlock>
+            <TextBlock x:Name="TblMNameError" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Tag="MName"></TextBlock>
+            <TextBlock x:Name="TblLoginError" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" Tag="Login"></TextBlock>
+            <TextBlock x:Name="TblPasswordError" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Left" Tag="Password"></TextBlock>
+            <TextBlock x:Name="TblConfirmPasswordError" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Left" Tag="ConfirmPassword"></TextBlock>
+            <TextBlock x:Name="TblPhoneError" Grid.Row="6" Grid.Column="2" HorizontalAlignment="Left" Tag="Phone"></TextBlock>
+            
+        </Grid>      
+        
+
+        <Button x:Name="BtnRegister" Grid.Row="2" Width="300" Click="BtnRegister_Click">Зарегистрироваться</Button>
+    </Grid>
+</Window>
