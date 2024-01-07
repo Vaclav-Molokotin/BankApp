@@ -18,9 +18,9 @@ namespace BankApp.UI.Client.Pages
     /// <summary>
     /// Логика взаимодействия для pgHistory.xaml
     /// </summary>
-    public partial class pgHistory : Page
+    public partial class PgHistory : Page
     {
-        public pgHistory()
+        public PgHistory()
         {
             InitializeComponent();
         }

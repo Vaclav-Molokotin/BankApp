@@ -10,7 +10,7 @@ namespace BankApp.Libs
 {
     static class DB
     {
-        static MySqlConnection Connection = new MySqlConnection("server=localhost;port=3306;username=root;password=;database=bankdb");
+        static MySqlConnection Connection = new MySqlConnection("server=localhost;port=3306;username=root;password=539533;database=bankdb");
         public static DataTable Table = new DataTable();
         public static MySqlDataAdapter Adapter = new MySqlDataAdapter();
         public static MySqlCommand Command = new MySqlCommand();
@@ -25,8 +25,9 @@ namespace BankApp.Libs
 
         static public void CloseConnection()
         {
-            if (Connection.State == System.Data.ConnectionState.Open)
+            if (Connection.State == ConnectionState.Open)
             {
+                Table.Clear();
                 Connection.Close();
             }
         }

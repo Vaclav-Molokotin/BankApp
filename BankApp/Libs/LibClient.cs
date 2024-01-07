@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace BankApp.Libs
 {
-    class LibClient : LibUser
+    public static class LibClient
     {
-        public List<LibBill> bills;
-        public LibClient(string login) : base(login)
-        {
-        }
+
     }
 }

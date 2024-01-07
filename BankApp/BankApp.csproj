@@ -32,4 +32,8 @@
     <Resource Include="Resources\Assets\LogoWhite.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UI\Common\Pages\" />
+  </ItemGroup>
+
 </Project>

@@ -18,9 +18,9 @@ namespace BankApp.UI.Client.Pages
     /// <summary>
     /// Логика взаимодействия для pgTransfer.xaml
     /// </summary>
-    public partial class pgTransfer : Page
-    {
-        public pgTransfer()
+    public partial class PgTransfer : Page
+    {   
+        public PgTransfer()
         {
             InitializeComponent();
         }

@@ -18,7 +18,7 @@ namespace BankApp.UI.Client.UserControls
     /// <summary>
     /// Логика взаимодействия для ucTransactionBlock.xaml
     /// </summary>
-    public partial class ucTransactionBlock : UserControl
+    public partial class UcTransactionBlock : UserControl
     {
         public string TransactionType { get; set; }
         public string BillTo { get; set; }
@@ -29,7 +29,7 @@ namespace BankApp.UI.Client.UserControls
         public string Data { get; set; }
         public string Status { get; set; }
         
-        public ucTransactionBlock()
+        public UcTransactionBlock()
         {
             InitializeComponent();
             DataContext = this;
