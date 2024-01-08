@@ -1,16 +1,28 @@
 ﻿using BankApp.Libs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace BankApp.Models
 {
+    /// <summary>
+    /// Класс модели пользователя
+    /// </summary>
     public class User
     {
-        public int Id { get; set; }
+        protected string fName;
+        protected string lName;
+        protected string mName;
+        protected string login;
+        protected string password;
+        protected string phone;
+
+        /// <summary>
+        /// ID пользователя
+        /// </summary>
+        public uint Id { get; set; }
+        /// <summary>
+        /// Имя пользователя
+        /// </summary>
         public string FName
         {
             get { return fName; }
@@ -37,6 +49,9 @@ namespace BankApp.Models
                     deleteErrorsByField("FName");
             }
         }
+        /// <summary>
+        /// Фамилия пользователя
+        /// </summary>
         public string LName
         {
             get
@@ -66,6 +81,9 @@ namespace BankApp.Models
                     deleteErrorsByField("LName");
             }
         }
+        /// <summary>
+        /// Отчество пользователя
+        /// </summary>
         public string MName
         {
             get
@@ -95,6 +113,9 @@ namespace BankApp.Models
                     deleteErrorsByField("MName");
             }
         }
+        /// <summary>
+        /// Логин пользователя
+        /// </summary>
         public string Login
         {
             get
@@ -128,6 +149,9 @@ namespace BankApp.Models
                     deleteErrorsByField("Login");
             }
         }
+        /// <summary>
+        /// Пароль пользователя
+        /// </summary>
         public string Password
         {
             get
@@ -147,6 +171,9 @@ namespace BankApp.Models
                     errors.Add(new ModelError { FieldName = "Password", Description = "Длина пароля должна быть не более 100 символов!" });
             }
         }
+        /// <summary>
+        /// Телефон пользователя
+        /// </summary>
         public string Phone
         {
             get
@@ -172,21 +199,21 @@ namespace BankApp.Models
                 addErrors(errors);
             }
         }
-        public int RoleID { get; set; }
+        /// <summary>
+        /// Роль пользователя
+        /// </summary>
+        public uint RoleID { get; set; }
 
-
-        private string fName;
-        private string lName;
-        private string mName;
-        private string login;
-        private string password;
-        private string phone;
-
-
-
+        /// <summary>
+        /// Ошибки валидации модели
+        /// </summary>
         public List<ModelError> Errors { get; set; } = new();
-
-        private void addErrors(List<ModelError> errors)
+                      
+        /// <summary>
+        /// Метод. Добавляет ошибки валидации модели
+        /// </summary>
+        /// <param name="errors">Список ошибок</param>
+        protected void addErrors(List<ModelError> errors)
         {
             foreach (ModelError error in errors)
             {
@@ -194,7 +221,11 @@ namespace BankApp.Models
             }
         }
 
-        private void deleteErrorsByField(string fieldName)
+        /// <summary>
+        /// Метод. Удаляет ошибки валидации модели по полю
+        /// </summary>
+        /// <param name="fieldName">Имя поля</param>
+        protected void deleteErrorsByField(string fieldName)
         {
             for (int i = 0; i < Errors.Count; i++)
             {

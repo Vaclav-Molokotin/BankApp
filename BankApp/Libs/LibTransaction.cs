@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace BankApp.Libs
 {
-    internal class LibTransaction
+    /// <summary>
+    /// Статический метод для работы с транзакциями
+    /// </summary>
+    public class LibTransaction
     {
     }
 }

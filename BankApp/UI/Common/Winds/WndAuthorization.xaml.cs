@@ -1,5 +1,6 @@
 ﻿using BankApp.Libs;
-using BankApp.UI.Client.Windows;
+using BankApp.Models;
+using BankApp.UI.ClientUI.Windows;
 using BankApp.UI.Common.Winds;
 using MySql.Data.MySqlClient;
 using System;
@@ -32,8 +33,13 @@ namespace BankApp
 
         private void btnAuthorize_Click(object sender, RoutedEventArgs e)
         {
-            if (authorize())
-            {                
+            User? user = authorize();
+            if (user.RoleID == 3)
+                user = new Client(user);
+            if (user is not null)
+            {
+                LibUser.CurrentUser = user;
+
                 WndHome wnd = new WndHome();
                 wnd.Owner = this;
                 wnd.Show();
@@ -45,13 +51,13 @@ namespace BankApp
             }
         }
 
-        private bool authorize()
+        private User? authorize()
         {
-            bool result = false;
+            User? result;
             if(chbxShowPassword.IsChecked == true)
-               result = LibUser.FindUserByLogopas(tbLogin.Text, tbPassword.Text);
+               result = LibUser.GetUserByLogopas(tbLogin.Text, tbPassword.Text);
             else
-                result = LibUser.FindUserByLogopas(tbLogin.Text, pwbxPassword.Password);
+                result = LibUser.GetUserByLogopas(tbLogin.Text, pwbxPassword.Password);
             return result;
         }
 
@@ -75,7 +81,8 @@ namespace BankApp
         {
             if(e.Key.ToString() == "Return")
             {
-                if (authorize())
+                User? result = authorize();
+                if (result is null)
                 {
                     WndHome wnd = new WndHome();
                     wnd.Owner = this;
@@ -92,8 +99,14 @@ namespace BankApp
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
             WndRegistration wnd = new WndRegistration();
+            wnd.Owner = this; 
             wnd.Show();
-            Close();
+            Hide();
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+
         }
     }
 }

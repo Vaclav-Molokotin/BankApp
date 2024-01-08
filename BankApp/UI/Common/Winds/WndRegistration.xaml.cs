@@ -62,6 +62,7 @@ namespace BankApp.UI.Common.Winds
             if (LibUser.CreateUser(user))
             {
                 MessageBox.Show("Вы успешно зарегистрировались!");
+
             }
             else
             {
@@ -115,6 +116,11 @@ namespace BankApp.UI.Common.Winds
                 TblPhoneError.Text = "Телефон занят!";
             else
                 TblPhoneError.Text = string.Empty;
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            Owner.Show();
         }
     }
 }

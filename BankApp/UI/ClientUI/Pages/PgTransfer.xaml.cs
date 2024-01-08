@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BankApp.UI.Client.Pages
+namespace BankApp.UI.ClientUI.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для pgTransferBtwBills.xaml
+    /// Логика взаимодействия для pgTransfer.xaml
     /// </summary>
-    public partial class PgTransferBtwBills : Page
-    {
-        public PgTransferBtwBills()
+    public partial class PgTransfer : Page
+    {   
+        public PgTransfer()
         {
             InitializeComponent();
         }

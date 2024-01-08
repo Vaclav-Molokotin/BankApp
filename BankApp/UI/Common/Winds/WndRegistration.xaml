@@ -8,7 +8,9 @@
         Title="Банк - Регистрация"
         
         Height="550" Width="600"
-        MinHeight="550" MinWidth="600">
+        MinHeight="550" MinWidth="600"
+        
+        Closed="Window_Closed">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="70"></RowDefinition>            

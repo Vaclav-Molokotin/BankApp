@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BankApp.UI.Client.UserControls
+namespace BankApp.UI.ClientUI.UserControls
 {
     /// <summary>
     /// Логика взаимодействия для ucTransactionBlock.xaml

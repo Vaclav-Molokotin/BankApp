@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace BankApp.UI.Client.Pages
+namespace BankApp.UI.ClientUI.Pages
 {
     /// <summary>
     /// Логика взаимодействия для pgHistory.xaml

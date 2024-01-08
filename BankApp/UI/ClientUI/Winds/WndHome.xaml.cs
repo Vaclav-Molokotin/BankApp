@@ -1,4 +1,4 @@
-﻿using BankApp.UI.Client.Pages;
+﻿using BankApp.UI.ClientUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace BankApp.UI.Client.Windows
+namespace BankApp.UI.ClientUI.Windows
 {
     /// <summary>
     /// Логика взаимодействия для wndHome.xaml
@@ -22,27 +22,29 @@ namespace BankApp.UI.Client.Windows
     {
         object pageType;
         const string classNamePrefix = "BankApp.UI.Client.Pages.";
+
+        private bool isExit = false;
         public WndHome()
         {
             InitializeComponent();
-            pgHome page = new pgHome();
+            PgHome page = new PgHome();
             frame.Navigate(page);
             pageType = page.GetType();
         }
 
         private void btnHome_Click(object sender, RoutedEventArgs e)
         {
-            if(pageType.ToString() != classNamePrefix + "pgHome")
+            if (pageType.ToString() != classNamePrefix + "pgHome")
             {
-                pgHome page = new pgHome();
+                PgHome page = new PgHome();
                 frame.Navigate(page);
                 pageType = page.GetType();
-            }            
+            }
         }
 
         private void btnTransfer_Click(object sender, RoutedEventArgs e)
         {
-            if(pageType.ToString() != classNamePrefix + "pgTransfer")
+            if (pageType.ToString() != classNamePrefix + "pgTransfer")
             {
                 PgTransfer page = new PgTransfer();
                 frame.Navigate(page);
@@ -53,8 +55,7 @@ namespace BankApp.UI.Client.Windows
         private void btnTranferBtwBills_Click(object sender, RoutedEventArgs e)
         {
             if (pageType.ToString() != classNamePrefix + "pgTransferBtwBills")
-            {               
-                string type = pageType.ToString();  
+            {
                 PgTransferBtwBills page = new PgTransferBtwBills();
                 frame.Navigate(page);
                 pageType = page.GetType();
@@ -74,12 +75,14 @@ namespace BankApp.UI.Client.Windows
         private void btnExit_Click(object sender, RoutedEventArgs e)
         {
             Owner.Show();
+            isExit = true;
             Close();
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Application.Current.Shutdown();
+            if (!isExit)
+                Application.Current.Shutdown();
         }
     }
 }
