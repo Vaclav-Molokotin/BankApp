@@ -38,7 +38,7 @@
             <PasswordBox x:Name="pwbxPassword" KeyUp="Password_KeyUp"></PasswordBox>
             <CheckBox x:Name="chbxShowPassword" Click="chbxShowPassword_Click">Показать пароль</CheckBox>
             
-            <Button x:Name="btnAuthorize" Click="btnAuthorize_Click">Войти</Button>
+            <Button x:Name="btnAuthorize" Click="BtnAuthorize_Click">Войти</Button>
             <Button x:Name="btnRegister" Click="btnRegister_Click">Зарегистрироваться</Button>
             
         </StackPanel>

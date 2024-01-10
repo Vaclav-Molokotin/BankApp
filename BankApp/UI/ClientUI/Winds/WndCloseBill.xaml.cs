@@ -33,7 +33,7 @@ namespace BankApp.UI.ClientUI.Winds
             CmbxBills.Items.Clear();
             foreach (Bill bill in (LibUser.CurrentUser as Client).Bills)
             {
-                if (!bill.IsFrozen)
+                if (bill.Status != BillStatus.Заморожен)
                     CmbxBills.Items.Add(bill);
             }
         }

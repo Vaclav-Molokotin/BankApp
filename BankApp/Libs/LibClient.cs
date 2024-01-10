@@ -23,12 +23,13 @@ namespace BankApp.Libs
         {
             List<Bill> bills = new List<Bill>();
 
-            DB.OpenConnection();
-            DB.Command.CommandText = "SELECT * FROM bill WHERE OwnerID = @userID;";
+            if (!DB.OpenConnection())
+                return null;
+            DB.Command.CommandText = "SELECT * FROM v_bill WHERE Owner = @user;";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
-            DB.Command.Parameters.Add("@userID", MySqlDbType.UInt32).Value = user.Id;
+            DB.Command.Parameters.Add("@user", MySqlDbType.VarChar).Value = user.Login;
 
             DB.Adapter.SelectCommand = DB.Command;
             DB.Adapter.Fill(DB.Table);
@@ -44,9 +45,10 @@ namespace BankApp.Libs
                     {
                         Number = DB.ConvertFromDBVal<string>(row.ItemArray[0]),
                         Balance = DB.ConvertFromDBVal<float>(row.ItemArray[1]),
-                        OwnerID = DB.ConvertFromDBVal<uint>(row.ItemArray[2]),
+                        Owner = DB.ConvertFromDBVal<string>(row.ItemArray[2]),
                         CardNumber = DB.ConvertFromDBVal<string>(row.ItemArray[3]),
-                        IsFrozen = DB.ConvertFromDBVal<bool>(row.ItemArray[4])
+                        Name = DB.ConvertFromDBVal<string>(row.ItemArray[4]),
+                        Status = DB.ConvertFromDBVal<BillStatus>(row.ItemArray[5]),
                     };
 
                     bills.Add(bill);

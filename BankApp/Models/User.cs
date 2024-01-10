@@ -1,6 +1,8 @@
 ﻿using BankApp.Libs;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using System.Windows.Controls.Primitives;
 
 namespace BankApp.Models
 {
@@ -15,6 +17,9 @@ namespace BankApp.Models
         protected string login;
         protected string password;
         protected string phone;
+        protected DateTime creationDate;
+        protected string status;
+        protected string role;
 
         /// <summary>
         /// ID пользователя
@@ -200,9 +205,17 @@ namespace BankApp.Models
             }
         }
         /// <summary>
+        /// Дата создания аккаунта
+        /// </summary>
+        public DateTime CreationDate { get; set; }
+        /// <summary>
+        /// Статус пользователя
+        /// </summary>
+        public UserStatus Status { get; set; }
+        /// <summary>
         /// Роль пользователя
         /// </summary>
-        public uint RoleID { get; set; }
+        public UserRole Role { get; set; }
 
         /// <summary>
         /// Ошибки валидации модели
@@ -234,5 +247,20 @@ namespace BankApp.Models
             }
         }
 
+        public enum UserStatus
+        {
+            Активен = 1,
+            Заблокирован = 2,
+            Удалён = 3
+        }
+
+        public enum UserRole
+        {
+            Администратор = 1,
+            Менеджер = 2,
+            Клиент = 3
+        }
     }
 }
+
+

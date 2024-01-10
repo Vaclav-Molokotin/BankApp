@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Assets\Info.png" />
     <None Remove="Resources\Assets\Logo.ico" />
     <None Remove="Resources\Assets\Logo.png" />
     <None Remove="Resources\Assets\LogoWhite.png" />
@@ -27,6 +28,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Assets\Info.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\Assets\Logo.ico" />
     <Resource Include="Resources\Assets\Logo.png" />
     <Resource Include="Resources\Assets\LogoWhite.png" />

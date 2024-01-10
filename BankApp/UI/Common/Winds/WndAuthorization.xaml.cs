@@ -18,6 +18,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using static BankApp.Models.User;
 
 namespace BankApp
 {
@@ -31,19 +32,24 @@ namespace BankApp
             InitializeComponent();
         }
 
-        private void btnAuthorize_Click(object sender, RoutedEventArgs e)
+        private void BtnAuthorize_Click(object sender, RoutedEventArgs e)
         {
             User? user = authorize();
-            if (user.RoleID == 3)
-                user = new Client(user);
+            
             if (user is not null)
             {
-                LibUser.CurrentUser = user;
+                if (user.Role == UserRole.Клиент)
+                {
+                    user = new Client(user);
+                    LibUser.CurrentUser = user;
+                    WndHome wnd = new WndHome();
+                   
+                    wnd.Owner = this;
+                    wnd.Show();
+                    Hide();
+                }
 
-                WndHome wnd = new WndHome();
-                wnd.Owner = this;
-                wnd.Show();
-                Hide();
+                              
             }
             else
             {

@@ -16,12 +16,18 @@
 
         <DockPanel>
             <TextBlock DockPanel.Dock="Top">Текущий счёт:</TextBlock>
-            <ComboBox x:Name="CmbxBills" DockPanel.Dock="Top" DisplayMemberPath="Number" SelectionChanged="CmbxBills_Selected"></ComboBox>
-            
-            <Button DockPanel.Dock="Bottom" x:Name="BtnBindCard" Click="BtnBindCard_Click">Привязать карту</Button>
+            <ComboBox x:Name="CmbxBills" DockPanel.Dock="Top" DisplayMemberPath="Number" SelectionChanged="CmbxBills_Selected" SelectedIndex="0"></ComboBox>
+            <Button x:Name="BtnBillsSetting" DockPanel.Dock="Top" Click="BtnBillsSetting_Click">Настройки счетов</Button>
+                
             <Button DockPanel.Dock="Bottom" x:Name="BtnCloseCard" Click="BtnCloseCard_Click">Закрыть карту</Button>
-            <Button DockPanel.Dock="Bottom" x:Name="BtnReissueCard" Click="BtnReissueCard_Click">Перевыпустить карту</Button>
-            <Label DockPanel.Dock="Bottom" x:Name="LabBalance">Ваш баланс:</Label>
+            <Button DockPanel.Dock="Bottom" x:Name="BtnBindCard" Click="BtnBindCard_Click">Привязать карту</Button>
+
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
+                <TextBlock x:Name="TblCard">Карта не привязана</TextBlock>
+                <Image x:Name="ImgInfo" Source="/Resources/Assets/Info.png" Width="40" MouseDown="ImgInfo_MouseDown" Cursor="Hand"></Image>
+            </StackPanel>
+            
+            <TextBlock FontSize="20" DockPanel.Dock="Bottom" x:Name="TblBalance">Ваш баланс:</TextBlock>            
         </DockPanel>
 
         <DockPanel Grid.Column="1">

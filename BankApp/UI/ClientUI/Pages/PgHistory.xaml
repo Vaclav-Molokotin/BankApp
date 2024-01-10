@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:BankApp.UI.ClientUI.Pages" xmlns:usercontrols="clr-namespace:BankApp.UI.ClientUI.UserControls"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="pgHistory">
+      Title="Банк - История транзакций">
 
     <StackPanel>
         <usercontrols:UcTransactionBlock TransactionType="Говно мамонта" BillTo="Гена" BillFrom="Генч" FullName="Насрал Евгеньевич" Amount="0" TransactionID="12" Data="12/12/2012" Status="Готово"></usercontrols:UcTransactionBlock>

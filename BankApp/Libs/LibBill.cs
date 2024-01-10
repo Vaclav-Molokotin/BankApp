@@ -2,6 +2,7 @@
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -19,20 +20,48 @@ namespace BankApp.Libs
         /// </summary>
         /// <param name="user">Пользователь, для которого создаётся счёт</param>
         /// <returns>Результат добавления</returns>
-        public static bool CreateBill(User user)
+        public static bool AddBill(User user)
         {
             string number = generateNumber();
-
-            DB.OpenConnection();
-            DB.Command.CommandText = "INSERT INTO bill VALUES (@Number, @Balance, @OwnerID, @CardNumber, @IsFrozen);";
+            if (number == "Error")
+                return false;
+            if (!DB.OpenConnection())
+                return false;
+            DB.Command.CommandText = "INSERT INTO bill (Number, Balance, OwnerID, StatusID) VALUES (@Number, @Balance, @OwnerID, @StatusID);";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
             DB.Command.Parameters.Add("@Number", MySqlDbType.VarChar).Value = number;
             DB.Command.Parameters.Add("@Balance", MySqlDbType.Float).Value = 0.0;
             DB.Command.Parameters.Add("@OwnerID", MySqlDbType.Int32).Value = user.Id;
-            DB.Command.Parameters.Add("@CardNumber", MySqlDbType.VarChar).Value = null;
-            DB.Command.Parameters.Add("@IsFrozen", MySqlDbType.Bit).Value = 0;
+            DB.Command.Parameters.Add("@StatusID", MySqlDbType.Int32).Value = (int)BillStatus.Активен;
+
+            int rows = DB.Command.ExecuteNonQuery();
+
+            DB.CloseConnection();
+
+            if (rows == 0)
+                return false;
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="card"></param>
+        /// <param name="bill"></param>
+        /// <returns></returns>
+        public static bool BindCard(Card card, Bill bill)
+        {
+            if (!DB.OpenConnection())
+                return false;
+
+            DB.Command.CommandText = "UPDATE bill SET CardNumber = @CardNumber WHERE Number = @Number;";
+            DB.Command.Connection = DB.GetConnection();
+            DB.Command.Parameters.Clear();
+
+            DB.Command.Parameters.Add("@Number", MySqlDbType.VarChar).Value = bill.Number;
+            DB.Command.Parameters.Add("@CardNumber", MySqlDbType.VarChar).Value = card.Number;
 
             int rows = DB.Command.ExecuteNonQuery();
 
@@ -48,7 +77,7 @@ namespace BankApp.Libs
         /// </summary>
         /// <returns>Уникальный номер счёта</returns>
         private static string generateNumber()
-        {            
+        {
             string result = string.Empty;
 
             while (true)
@@ -60,7 +89,9 @@ namespace BankApp.Libs
                     result += random.Next(0, 9);
                 }
 
-                DB.OpenConnection();
+                if (!DB.OpenConnection())
+                    return "Error";
+
                 DB.Command.CommandText = "SELECT * FROM bill WHERE Number = @Number;";
                 DB.Command.Connection = DB.GetConnection();
                 DB.Command.Parameters.Clear();
@@ -81,7 +112,8 @@ namespace BankApp.Libs
         /// <returns>Результат удаления</returns>
         public static bool DeleteBill(Bill bill)
         {
-            DB.OpenConnection();
+            if (!DB.OpenConnection())
+                return false;
             DB.Command.CommandText = "DELETE FROM bill WHERE Number = @Number";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
@@ -92,9 +124,48 @@ namespace BankApp.Libs
 
             DB.CloseConnection();
 
-            if (rows == 0) 
+            if (rows == 0)
                 return false;
             return true;
+        }
+
+        public static Card? GetCardByBill(Bill bill)
+        {
+            Card card = new Card();
+
+            if (!DB.OpenConnection())
+                return null;
+            DB.Command.CommandText = "SELECT * FROM card c INNER JOIN bill b ON c.Number = b.CardNumber WHERE b.Number = @number;";
+            DB.Command.Connection = DB.GetConnection();
+            DB.Command.Parameters.Clear();
+
+            DB.Command.Parameters.Add("@number", MySqlDbType.VarChar).Value = bill.Number;
+
+            DB.Adapter.SelectCommand = DB.Command;
+            DB.Adapter.Fill(DB.Table);
+
+            DB.CloseConnection();
+
+            DataRow row = DB.Table.Rows[0];
+            if (DB.Table.Rows.Count > 0)
+            {
+                card = new Card
+                {
+                    Number = DB.ConvertFromDBVal<string>(row.ItemArray[0]),
+                    CVC = DB.ConvertFromDBVal<uint>(row.ItemArray[1]),
+                    DateTo = DB.ConvertFromDBVal<DateTime>(row.ItemArray[2]),
+                    DateFrom = DB.ConvertFromDBVal<DateTime>(row.ItemArray[3]),
+                    Status = DB.ConvertFromDBVal<CardStatus>(row.ItemArray[4])
+                };
+
+                DB.Table.Clear();
+                return card;
+            }
+            else
+            {
+                DB.Table.Clear();
+                return null;
+            }
         }
     }
 }

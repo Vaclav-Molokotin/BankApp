@@ -14,6 +14,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using static BankApp.Models.User;
 
 namespace BankApp.UI.Common.Winds
 {
@@ -54,7 +55,8 @@ namespace BankApp.UI.Common.Winds
                 Login = TbLogin.Text,
                 Password = PwbxPassword.Password,
                 Phone = TbPhone.Text,
-                RoleID = 3
+                Role = UserRole.Клиент,
+                Status = UserStatus.Активен
             };
 
 
@@ -62,7 +64,7 @@ namespace BankApp.UI.Common.Winds
             if (LibUser.CreateUser(user))
             {
                 MessageBox.Show("Вы успешно зарегистрировались!");
-
+                Close();
             }
             else
             {

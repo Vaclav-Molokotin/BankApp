@@ -3,9 +3,11 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static BankApp.Models.User;
 
 namespace BankApp.Libs
 {
@@ -27,7 +29,8 @@ namespace BankApp.Libs
         /// <returns>Информация о пользователе</returns>
         public static User? GetUserByLogopas(string login, string password)
         {
-            DB.OpenConnection();
+            if (!DB.OpenConnection())
+                return null;
             DB.Command.CommandText = "SELECT * FROM user WHERE login = @uL AND password = MD5(@uP)";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
@@ -45,10 +48,6 @@ namespace BankApp.Libs
 
             if (table.Rows.Count > 0)
             {
-                password = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[5]);
-                string phone = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[6]);
-                uint roleID = DB.ConvertFromDBVal<uint>(table.Rows[0].ItemArray[7]);
-
                 User user = new User
                 {
                     Id = DB.ConvertFromDBVal<uint>(table.Rows[0].ItemArray[0]),
@@ -56,12 +55,14 @@ namespace BankApp.Libs
                     LName = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[2]),
                     MName = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[3]),
                     Login = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[4]),
-                    Password = password,
-                    Phone = phone,
-                    RoleID = roleID                    
+                    Password = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[5]),
+                    Phone = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[6]),
+                    Role = DB.ConvertFromDBVal<UserRole>(table.Rows[0].ItemArray[7]),
+                    Status = DB.ConvertFromDBVal<UserStatus>(table.Rows[0].ItemArray[8]),
+                    CreationDate = DB.ConvertFromDBVal<DateTime>(table.Rows[0].ItemArray[9])
                 };
-                
-                return user;
+
+                return user;                
             }
             
             table.Clear();
@@ -79,9 +80,10 @@ namespace BankApp.Libs
             if (user.Errors.Count > 0)
                 return false;
 
-            DB.OpenConnection();
+            if (!DB.OpenConnection())
+                return false;
 
-            DB.Command.CommandText = "INSERT INTO user (FName, LName, MName, Login, Password, Phone, RoleID) VALUES (@FName, @LName, @MName, @Login, MD5(@Password), @Phone, @RoleID);";
+            DB.Command.CommandText = "INSERT INTO user (FName, LName, MName, Login, Password, Phone, RoleID, StatusID) VALUES (@FName, @LName, @MName, @Login, MD5(@Password), @Phone, @RoleID, @StatusID);";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
@@ -91,8 +93,9 @@ namespace BankApp.Libs
             DB.Command.Parameters.Add("@Login", MySqlDbType.VarChar).Value = user.Login;
             DB.Command.Parameters.Add("@Password", MySqlDbType.VarChar).Value = user.Password;
             DB.Command.Parameters.Add("@Phone", MySqlDbType.VarChar).Value = user.Phone;
-            DB.Command.Parameters.Add("@RoleID", MySqlDbType.VarChar).Value = user.RoleID;
-
+            DB.Command.Parameters.Add("@RoleID", MySqlDbType.Int32).Value = user.Role;
+            DB.Command.Parameters.Add("@StatusID", MySqlDbType.Int32).Value = user.Status;
+            
             int rows = DB.Command.ExecuteNonQuery();
 
             DB.CloseConnection();
@@ -110,8 +113,9 @@ namespace BankApp.Libs
         /// <returns>Занятость логина</returns>
         public static bool IsLoginExists(string login)
         {
-            DB.OpenConnection();
-            DB.Command.CommandText = "SELECT * FROM `user` WHERE `login` = @uL";
+            if (!DB.OpenConnection())
+                return false;
+            DB.Command.CommandText = "SELECT * FROM `v_user` WHERE `login` = @uL";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
@@ -138,8 +142,9 @@ namespace BankApp.Libs
         /// <returns>Занятость телефона</returns>
         public static bool IsPhoneBusy(string phone)
         {
-            DB.OpenConnection();
-            DB.Command.CommandText = "SELECT * FROM `user` WHERE `phone` = @uP";
+            if (!DB.OpenConnection())
+                return false;
+            DB.Command.CommandText = "SELECT * FROM `v_user` WHERE `phone` = @uP";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
@@ -159,5 +164,4 @@ namespace BankApp.Libs
             return false;
         }
     }
-
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankApp.Libs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,7 @@ namespace BankApp.Models
     /// </summary>
     public class Bill
     {
+
         /// <summary>
         /// Номер счёта
         /// </summary>
@@ -22,14 +24,41 @@ namespace BankApp.Models
         /// <summary>
         /// ID владельца счёта
         /// </summary>
-        public uint OwnerID { get; set; }
+        public string Owner { get; set; }
         /// <summary>
         /// Номер привязанной карты
         /// </summary>
         public string? CardNumber { get; set; }
         /// <summary>
-        /// Статус карты
+        /// Название счёта
         /// </summary>
-        public bool IsFrozen { get; set; }
+        public string Name { get; set; }
+        /// <summary>
+        /// Статус счёта
+        /// </summary>
+        public BillStatus Status { get; set; }
+
+
+        public Card Card
+        {
+            get
+            {
+                return LibCard.GetCardByNumber(CardNumber);
+            }
+
+            set
+            {
+                LibBill.BindCard(value, this);
+                CardNumber = value.Number;
+            }
+        }
+
+
+    }
+    public enum BillStatus
+    {
+        Заморожен = 1,
+        Активен = 2,
+        Закрыт = 3
     }
 }

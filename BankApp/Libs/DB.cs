@@ -15,7 +15,7 @@ namespace BankApp.Libs
     {
         // Строка соедиения с БД
         static MySqlConnection Connection = 
-            new MySqlConnection("server=localhost;port=3306;username=root;password=539533;database=bankdb");
+            new MySqlConnection("server=localhost;port=3306;username=root;password=539533;database=bankdb;convert zero datetime=True");
         // Таблица для хранения результатов запроса
         public static DataTable Table = new DataTable();
         // Адаптер для выполнения запросов
@@ -26,12 +26,20 @@ namespace BankApp.Libs
         /// <summary>
         /// Статический метод. Открывает соединение с БД
         /// </summary>
-        static public void OpenConnection()
+        static public bool OpenConnection()
         {
             if(Connection.State == ConnectionState.Closed)
             {
-                Connection.Open();
+                try
+                {
+                    Connection.Open();
+                }
+                catch 
+                {
+                    return false;
+                }
             }
+            return true;
         }
 
         /// <summary>
