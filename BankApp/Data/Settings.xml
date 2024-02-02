@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfSetting xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Setting>
+    <Subsettings />
+    <Key>MainBill</Key>
+    <Name>Основной счёт</Name>
+  </Setting>
+  <Setting>
+    <Subsettings />
+    <Key>SeeAllBills</Key>
+    <Name>Показать все счета</Name>
+    <Value>false</Value>
+  </Setting>
+</ArrayOfSetting>/Value>
+  </Setting>
+</ArrayOfSetting>>

@@ -18,7 +18,7 @@ namespace BankApp.Models
         /// <summary>
         /// CVC-код
         /// </summary>
-        public uint CVC { get; set; }
+        public string CVC { get; set; }
         /// <summary>
         /// Дата начала действия карты
         /// </summary>

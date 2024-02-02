@@ -1,4 +1,8 @@
-﻿using System;
+﻿using BankApp.Libs;
+using BankApp.Models;
+using BankApp.UI.ClientUI.UserControls;
+using BankApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +27,19 @@ namespace BankApp.UI.ClientUI.Pages
         public PgHistory()
         {
             InitializeComponent();
+            downloadTransactions();
+        }
+
+        private void downloadTransactions()
+        {
+            List<TransactionTransferView> transactions = new List<TransactionTransferView>();
+            transactions = LibTransaction.GetTransferTransactionsByClient(LibUser.CurrentUser as Client);
+
+            foreach (TransactionTransferView transaction in transactions)
+            {
+                UcTransactionBlock transactionBlock = new UcTransactionBlock(transaction);
+                SpTransactions.Children.Add(transactionBlock);
+            }
         }
     }
 }

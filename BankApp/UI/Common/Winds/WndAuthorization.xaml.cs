@@ -47,9 +47,7 @@ namespace BankApp
                     wnd.Owner = this;
                     wnd.Show();
                     Hide();
-                }
-
-                              
+                }                              
             }
             else
             {
@@ -88,7 +86,7 @@ namespace BankApp
             if(e.Key.ToString() == "Return")
             {
                 User? result = authorize();
-                if (result is null)
+                if (result is not null)
                 {
                     WndHome wnd = new WndHome();
                     wnd.Owner = this;
@@ -108,11 +106,6 @@ namespace BankApp
             wnd.Owner = this; 
             wnd.Show();
             Hide();
-        }
-
-        private void Window_Closed(object sender, EventArgs e)
-        {
-
         }
     }
 }

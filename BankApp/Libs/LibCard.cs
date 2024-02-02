@@ -1,5 +1,6 @@
 ﻿using BankApp.Models;
 using MySql.Data.MySqlClient;
+using MySqlX.XDevAPI.Common;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,11 +15,11 @@ namespace BankApp.Libs
         /// <summary>
         /// Статический метод. Создаёт запись о карте в БД
         /// </summary>
-        /// <returns>Результат добавления записи в БД</returns>
-        public static string AddCard()
+        /// <returns>Номер созданной карты</returns>
+        public static string? AddCard()
         {
             string number = generateNumber();
-            uint cvc = generateCvc();
+            string cvc = generateCvc();
 
             if (number == "Error")
                 return null;
@@ -30,7 +31,7 @@ namespace BankApp.Libs
             DB.Command.Parameters.Clear();
 
             DB.Command.Parameters.Add("@Number", MySqlDbType.VarChar).Value = number;
-            DB.Command.Parameters.Add("@CVC", MySqlDbType.UInt32).Value = cvc;
+            DB.Command.Parameters.Add("@CVC", MySqlDbType.VarChar).Value = cvc;
             DB.Command.Parameters.Add("@DateTo", MySqlDbType.DateTime).Value = DateTime.Now.AddYears(1);
             DB.Command.Parameters.Add("@DateFrom", MySqlDbType.DateTime).Value = DateTime.Now;
             DB.Command.Parameters.Add("@StatusID", MySqlDbType.Int32).Value = (int)CardStatus.Активна;
@@ -49,7 +50,7 @@ namespace BankApp.Libs
         /// </summary>
         /// <param name="number">Номер карты</param>
         /// <returns>Информация о карте</returns>
-        public static Card GetCardByNumber(string number)
+        public static Card? GetCardByNumber(string number)
         {
             if (!DB.OpenConnection())
                 return null;
@@ -71,7 +72,7 @@ namespace BankApp.Libs
                 Card card = new Card
                 {
                     Number = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[0]),
-                    CVC = DB.ConvertFromDBVal<uint>(table.Rows[0].ItemArray[1]),
+                    CVC = DB.ConvertFromDBVal<string>(table.Rows[0].ItemArray[1]),
                     DateTo = DB.ConvertFromDBVal<DateTime>(table.Rows[0].ItemArray[2]),
                     DateFrom = DB.ConvertFromDBVal<DateTime>(table.Rows[0].ItemArray[3]),
                     Status = DB.ConvertFromDBVal<CardStatus>(table.Rows[0].ItemArray[4]),
@@ -84,7 +85,11 @@ namespace BankApp.Libs
             return null;
         }
 
-
+        /// <summary>
+        /// Статический метод. Обновляет данные указанной карты
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns></returns>
         public static bool UpdateCard(Card card)
         {
             if (!DB.OpenConnection())
@@ -95,7 +100,7 @@ namespace BankApp.Libs
             DB.Command.Parameters.Clear();
 
             DB.Command.Parameters.Add("@Number", MySqlDbType.VarChar).Value = card.Number;
-            DB.Command.Parameters.Add("@CVC", MySqlDbType.UInt32).Value = card.CVC;
+            DB.Command.Parameters.Add("@CVC", MySqlDbType.VarChar).Value = card.CVC;
             DB.Command.Parameters.Add("@DateTo", MySqlDbType.Date).Value = card.DateTo;
             DB.Command.Parameters.Add("@DateFrom", MySqlDbType.Date).Value = card.DateFrom;
             DB.Command.Parameters.Add("@StatusID", MySqlDbType.UInt32).Value = card.Status;
@@ -113,11 +118,15 @@ namespace BankApp.Libs
         /// Статический метод. Генерирует трёхзначный CVC код карты
         /// </summary>
         /// <returns>CVC код карты</returns>
-        private static uint generateCvc()
+        private static string generateCvc()
         {
+            string result = string.Empty;
             Random random = new Random((int)DateTime.Now.Ticks);
-
-            return (uint)random.Next(0, 999);
+            for (int i = 0; i < 3; i++)
+            {
+                result += random.Next(0, 9);
+            }
+            return result;
         }
 
         /// <summary>

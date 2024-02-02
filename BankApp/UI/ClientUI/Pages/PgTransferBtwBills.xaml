@@ -5,10 +5,17 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:BankApp.UI.ClientUI.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="pgTransferBtwBills">
-
-    <Grid>
-        
-    </Grid>
+        d:DesignHeight="450" d:DesignWidth="800"
+  Title="Банк - Переводы">
+    <StackPanel Orientation="Vertical">
+        <TextBlock>Выберите счёт списания</TextBlock>
+        <ComboBox x:Name="CmbxBillFrom" Margin="5,5,5,0" DisplayMemberPath="Number" SelectedIndex="0" SelectionChanged="CmbxBillFrom_SelectionChanged"></ComboBox>
+        <TextBlock x:Name="TblBalanceFrom">Баланс:</TextBlock>
+        <TextBlock>Выберите счёт пополнения</TextBlock>
+        <ComboBox x:Name="CmbxBillTo" Margin="5,5,5,0" DisplayMemberPath="Number" SelectedIndex="0" SelectionChanged="CmbxBillTo_SelectionChanged"></ComboBox>
+        <TextBlock x:Name="TblBalanceTo">Баланс:</TextBlock>
+        <TextBlock>Укажите сумму перевода</TextBlock>
+        <TextBox x:Name="TbxAmount"></TextBox>
+        <Button x:Name="BtnTransfer" Click="BtnTransfer_Click">Перевести</Button>
+    </StackPanel>
 </Page>

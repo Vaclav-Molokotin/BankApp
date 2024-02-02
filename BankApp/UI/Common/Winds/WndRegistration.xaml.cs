@@ -61,14 +61,14 @@ namespace BankApp.UI.Common.Winds
 
 
 
-            if (LibUser.CreateUser(user))
+            if (LibUser.AddUser(user))
             {
-                MessageBox.Show("Вы успешно зарегистрировались!");
+                MessageBox.Show("Вы успешно зарегистрировались!", "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
                 Close();
             }
             else
             {
-                MessageBox.Show("Во время регистрации произошла ошибка!");
+                MessageBox.Show("Во время регистрации произошла ошибка!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 printErrors(user);
             }
         }

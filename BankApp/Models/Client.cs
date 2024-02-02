@@ -12,7 +12,7 @@ namespace BankApp.Models
         /// <summary>
         /// Список счетов клиента
         /// </summary>
-        public List<Bill> Bills
+        public List<Bill>? Bills
         {
             get
             {

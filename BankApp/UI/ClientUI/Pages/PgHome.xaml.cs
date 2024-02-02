@@ -1,7 +1,9 @@
 ﻿using BankApp.Libs;
 using BankApp.Models;
+using BankApp.UI.ClientUI.UserControls;
 using BankApp.UI.ClientUI.Windows;
 using BankApp.UI.ClientUI.Winds;
+using BankApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using BankApp.Libs;
+using static BankApp.Libs.LibSettings;
 
 namespace BankApp.UI.ClientUI.Pages
 {
@@ -26,11 +30,40 @@ namespace BankApp.UI.ClientUI.Pages
     {
         private int antiRecursion = 0;
         private int selectedBill = 0;
+
         public PgHome()
         {
-
             InitializeComponent();
             downloadBills();
+
+            Setting setting = GetSetting(Settings.MainBill);
+            string? mainBillNumber = setting?.Value;
+            if (mainBillNumber != null)
+            {
+                foreach (Bill bill in CmbxBills.Items)
+                {
+                    if (bill.Number == mainBillNumber)
+                    {
+                        CmbxBills.SelectedItem = bill;
+                        break;
+                    }
+                }
+            }
+
+            downloadTransactions();
+        }
+
+        private void downloadTransactions()
+        {
+            List<TransactionTransferView> transactions = new List<TransactionTransferView>();
+            transactions = LibTransaction.GetTransferTransactionsByClient(LibUser.CurrentUser as Client);
+            if (transactions is null)
+                return;
+            foreach (TransactionTransferView transaction in transactions)
+            {
+                UcTransactionBlock transactionBlock = new UcTransactionBlock(transaction);
+                SpTransactions.Children.Add(transactionBlock);
+            }
         }
 
         private void setInterface()
@@ -38,7 +71,18 @@ namespace BankApp.UI.ClientUI.Pages
             if (CmbxBills.Items.Count > 0)
             {
                 Bill bill = CmbxBills.SelectedItem as Bill;
-                TblBalance.Text = $"Ваш баланс: {bill.Balance} рублей\nСчёт {bill.Status}";
+
+                string ruble;
+                int lastcypher = (int)bill.Balance % 10;
+
+                if (lastcypher == 1)
+                    ruble = "рубль";
+                else if (lastcypher > 1 && lastcypher < 5)
+                    ruble = "рубля";
+                else
+                    ruble = "рублей";
+
+                TblBalance.Text = $"Ваш баланс: {bill.Balance} {ruble}\nСчёт {bill.Status}";
 
                 TblBalance.Visibility = Visibility.Visible;
                 TblCard.Visibility = Visibility.Visible;
@@ -58,7 +102,10 @@ namespace BankApp.UI.ClientUI.Pages
                     if (bill.CardNumber == null || bill.Card?.Status != CardStatus.Активна)
                     {
                         if (bill.CardNumber == null)
+                        {
+                            ImgInfo.Visibility = Visibility.Collapsed;
                             TblCard.Text = "Карта не привязана";
+                        }
                         else
                             TblCard.Text = $"Карта {bill.Card?.Status}";
                         BtnCloseCard.IsEnabled = false;
@@ -87,6 +134,9 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void downloadBills()
         {
+            WndHome.UpdateInterface((LibManager.MainFrame.Parent as Grid).Parent as WndHome);
+            Setting setting = GetSetting(Settings.SeeAllBills);
+
             User user = LibUser.CurrentUser;
             if (CmbxBills.SelectedIndex != -1)
                 selectedBill = CmbxBills.SelectedIndex;
@@ -111,7 +161,12 @@ namespace BankApp.UI.ClientUI.Pages
                             isRepeat = true;
                     }
                     if (!isRepeat)
+                    {
+                        if (!bool.Parse(setting.Value) && bill.Status == BillStatus.Закрыт)
+                            continue;
+
                         CmbxBills.Items.Add(bill);
+                    }
                 }
             }
 
@@ -123,6 +178,8 @@ namespace BankApp.UI.ClientUI.Pages
             WndCloseBill wnd = new WndCloseBill();
             if (wnd.ShowDialog() is not null)
             {
+                if((LibUser.CurrentUser as Client).Bills.Count != 0)
+                    antiRecursion--;
                 downloadBills();
             }
         }
@@ -130,17 +187,19 @@ namespace BankApp.UI.ClientUI.Pages
         private void BtnOpenBill_Click(object sender, RoutedEventArgs e)
         {
             MessageBoxResult result = MessageBox.Show("Вы уверены, что хотите открыть новый счёт?",
-                "Внимание", MessageBoxButton.YesNo);
+                "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning);
             if (result == MessageBoxResult.No)
                 return;
 
             if (LibBill.AddBill(LibUser.CurrentUser))
             {
                 MessageBox.Show("Счёт создан!");
+                antiRecursion--;
                 downloadBills();
             }
             else
-                MessageBox.Show("При создании счёта произошла ошибка!");
+                MessageBox.Show("При создании счёта произошла ошибка!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+
         }
 
 
@@ -184,14 +243,26 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void ChbxHistorySettings_Clicked(object sender, RoutedEventArgs e)
         {
-
+            if ((bool)ChbxHistorySettings.IsChecked)
+            {
+                foreach (UcTransactionBlock ucTransaction in SpTransactions.Children)
+                {
+                    if (ucTransaction.transaction.BillFromNumber != CmbxBills.Text)
+                        ucTransaction.Visibility = Visibility.Collapsed;
+                }
+            }
+            else
+            {
+                foreach (UcTransactionBlock ucTransaction in SpTransactions.Children)
+                    ucTransaction.Visibility = Visibility.Visible;
+            }
         }
 
         private void CmbxBills_Selected(object sender, RoutedEventArgs e)
         {
-            if (antiRecursion == 0)
+            if (antiRecursion <= 0)
             {
-                antiRecursion = 2;
+                antiRecursion += 2;
                 downloadBills();
             }
             else
@@ -209,7 +280,8 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void BtnBillsSetting_Click(object sender, RoutedEventArgs e)
         {
-
+            WndBillSettings wnd = new WndBillSettings();
+            wnd.ShowDialog();
         }
     }
 }

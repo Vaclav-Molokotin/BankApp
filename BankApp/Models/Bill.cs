@@ -12,6 +12,7 @@ namespace BankApp.Models
     /// </summary>
     public class Bill
     {
+        private float balance;
 
         /// <summary>
         /// Номер счёта
@@ -20,7 +21,18 @@ namespace BankApp.Models
         /// <summary>
         /// Баланс счёта
         /// </summary>
-        public float Balance { get; set; }
+        public float Balance
+        {
+            get
+            {
+                return (float)Math.Round(balance, 2);
+            }
+
+            set
+            {
+                balance = value;
+            }
+        }
         /// <summary>
         /// ID владельца счёта
         /// </summary>

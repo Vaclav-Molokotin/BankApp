@@ -74,9 +74,8 @@ namespace BankApp.Libs
         /// </summary>
         /// <param name="user">Добавляемый пользователь</param>
         /// <returns>Результат добавления</returns>
-        public static bool CreateUser(User user)
-        {             
-
+        public static bool AddUser(User user)
+        {  
             if (user.Errors.Count > 0)
                 return false;
 
@@ -95,6 +94,7 @@ namespace BankApp.Libs
             DB.Command.Parameters.Add("@Phone", MySqlDbType.VarChar).Value = user.Phone;
             DB.Command.Parameters.Add("@RoleID", MySqlDbType.Int32).Value = user.Role;
             DB.Command.Parameters.Add("@StatusID", MySqlDbType.Int32).Value = user.Status;
+
             
             int rows = DB.Command.ExecuteNonQuery();
 

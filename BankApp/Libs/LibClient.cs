@@ -19,13 +19,13 @@ namespace BankApp.Libs
         /// </summary>
         /// <param name="user">Клиент</param>
         /// <returns>Список счетов клиента</returns>
-        public static List<Bill>? GetBillsByClient(User user)
+        public static List<Bill>? GetBillsByClient(Client user, bool active = false)
         {
             List<Bill> bills = new List<Bill>();
 
             if (!DB.OpenConnection())
                 return null;
-            DB.Command.CommandText = "SELECT * FROM v_bill WHERE Owner = @user;";
+            DB.Command.CommandText = $"SELECT * FROM v_bill WHERE Owner = @user {(active?"AND StatusID = 2":string.Empty)};";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 

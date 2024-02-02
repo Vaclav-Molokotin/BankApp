@@ -6,9 +6,17 @@
       xmlns:local="clr-namespace:BankApp.UI.ClientUI.Pages"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="pgTransfer">
-
-    <Grid>
-        
-    </Grid>
+      Title="Банк - Переводы">
+    <StackPanel Orientation="Vertical">
+        <TextBlock>Выберите счёт списания</TextBlock>
+        <ComboBox x:Name="CmbxBillFrom" Margin="5,5,5,0" DisplayMemberPath="Number" SelectedIndex="0" SelectionChanged="CmbxBillFrom_SelectionChanged"></ComboBox>
+        <TextBlock x:Name="TblBalance">Баланс: </TextBlock>
+        <TextBlock>Укажите сумму списания</TextBlock>
+        <TextBox x:Name="TbxAmount"></TextBox>
+        <TextBlock>Введите номер счёта</TextBlock>
+        <TextBox x:Name="TbxBillTo"></TextBox>
+        <TextBox x:Name="TbxCardTo" Visibility="Collapsed"></TextBox>
+        <CheckBox x:Name="ChbxEnterCard" Click="ChbxEnterCard_Click">Перевести по номеру карты</CheckBox>
+        <Button x:Name="BtnTransfer" Click="BtnTransfer_Click">Перевести</Button>
+    </StackPanel>
 </Page>

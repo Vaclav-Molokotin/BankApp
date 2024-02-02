@@ -8,7 +8,8 @@
         Title="Банк - Закрытие счёта"
         Height="450" Width="800"
         MinHeight="450" MinWidth="800"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
     <StackPanel Orientation="Vertical" Width="300">
         <TextBlock>Выберите счёт для закрытия:</TextBlock>
         <ComboBox x:Name="CmbxBills" DisplayMemberPath="Number" SelectionChanged="CmbxBills_SelectionChanged"></ComboBox>

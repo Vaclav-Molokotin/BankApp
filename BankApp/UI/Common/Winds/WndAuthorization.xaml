@@ -9,7 +9,7 @@
         Icon="/Resources/Assets/Logo.ico"
         Height="550" Width="800"
         MinHeight="550" MinWidth="800"
-        >
+        WindowStartupLocation="CenterOwner">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"></RowDefinition>
@@ -31,11 +31,11 @@
             <Label>Авторизация</Label>
             
             <TextBlock>Логин</TextBlock>
-            <TextBox x:Name="tbLogin"></TextBox>
+            <TextBox x:Name="tbLogin">Anto_Pop</TextBox>
             
             <TextBlock>Пароль</TextBlock>
             <TextBox x:Name="tbPassword" Visibility="Collapsed" KeyUp="Password_KeyUp"></TextBox>
-            <PasswordBox x:Name="pwbxPassword" KeyUp="Password_KeyUp"></PasswordBox>
+            <PasswordBox x:Name="pwbxPassword" KeyUp="Password_KeyUp" Password="123"></PasswordBox>
             <CheckBox x:Name="chbxShowPassword" Click="chbxShowPassword_Click">Показать пароль</CheckBox>
             
             <Button x:Name="btnAuthorize" Click="BtnAuthorize_Click">Войти</Button>

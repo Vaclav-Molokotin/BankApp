@@ -31,7 +31,7 @@ namespace BankApp.UI.ClientUI.Winds
         private void downloadBills()
         {
             CmbxBills.Items.Clear();
-            foreach (Bill bill in (LibUser.CurrentUser as Client).Bills)
+            foreach (Bill bill in LibClient.GetBillsByClient(LibUser.CurrentUser as Client, true))
             {
                 if (bill.Status != BillStatus.Заморожен)
                     CmbxBills.Items.Add(bill);
@@ -60,7 +60,7 @@ namespace BankApp.UI.ClientUI.Winds
 
         private void CmbxBills_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string ruble = string.Empty;
+            string ruble;
             Bill bill = (LibUser.CurrentUser as Client).Bills[CmbxBills.SelectedIndex];
             byte cypher = (byte)(bill.Balance % 10);
             if (cypher == 1)

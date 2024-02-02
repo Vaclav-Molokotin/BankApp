@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1:3306
--- Время создания: Янв 10 2024 г., 16:37
+-- Время создания: Фев 02 2024 г., 18:44
 -- Версия сервера: 8.0.31
 -- Версия PHP: 8.0.26
 
@@ -41,6 +41,20 @@ CREATE TABLE IF NOT EXISTS `bill` (
   KEY `StatusID` (`StatusID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Таблица платёжного счёта';
 
+--
+-- Дамп данных таблицы `bill`
+--
+
+INSERT INTO `bill` (`Number`, `Balance`, `OwnerID`, `CardNumber`, `Name`, `StatusID`) VALUES
+('08000388372133625204', 0, 18, NULL, NULL, 3),
+('26024237815656404106', 4101, 17, '6646133656370511', NULL, 2),
+('32411784174580863134', 0, 18, NULL, NULL, 3),
+('47726413266743111841', 1.42001, 3, '0731264144847107', NULL, 2),
+('51175573861304508410', 1925.45, 3, NULL, NULL, 3),
+('73151083351717356481', 0, 3, NULL, NULL, 2),
+('73460551667445640885', 0, 17, NULL, NULL, 2),
+('83280100721302123130', 1131.35, 3, '2304177108288457', NULL, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -61,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `billstatus` (
 
 INSERT INTO `billstatus` (`ID`, `Name`) VALUES
 (2, 'Активен'),
-(3, 'Закрыть'),
+(3, 'Закрыт'),
 (1, 'Заморожен');
 
 -- --------------------------------------------------------
@@ -73,7 +87,7 @@ INSERT INTO `billstatus` (`ID`, `Name`) VALUES
 DROP TABLE IF EXISTS `card`;
 CREATE TABLE IF NOT EXISTS `card` (
   `Number` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Номер карты',
-  `CVC` int UNSIGNED NOT NULL COMMENT 'CVC-Код',
+  `CVC` char(3) COLLATE utf8mb4_general_ci NOT NULL COMMENT 'CVC-Код',
   `DateTo` date NOT NULL COMMENT 'Дата окончания действия карты',
   `DateFrom` date NOT NULL COMMENT 'Дата начала действия карты',
   `StatusID` int NOT NULL COMMENT 'Статус карты',
@@ -86,27 +100,14 @@ CREATE TABLE IF NOT EXISTS `card` (
 --
 
 INSERT INTO `card` (`Number`, `CVC`, `DateTo`, `DateFrom`, `StatusID`) VALUES
-('0247143101458667', 803, '2025-01-10', '2024-01-10', 1),
-('0733041261344240', 602, '2025-01-10', '2024-01-10', 1),
-('1517374331372710', 395, '2025-01-10', '2024-01-10', 3),
-('1716628744254466', 381, '2025-01-10', '2024-01-10', 3),
-('2233210544248546', 865, '2025-01-09', '2024-01-09', 1),
-('3026744846176686', 795, '2025-01-10', '2024-01-10', 3),
-('3125201034610578', 366, '2025-01-10', '2024-01-10', 3),
-('3664603715283542', 5, '2025-01-10', '2024-01-10', 1),
-('3717275070887146', 504, '2025-01-10', '2024-01-10', 3),
-('4142172110345617', 691, '2025-01-10', '2024-01-10', 3),
-('4158620733608754', 932, '2025-01-10', '2024-01-10', 3),
-('4267367530136106', 195, '2025-01-10', '2024-01-10', 3),
-('4570837081408483', 800, '2025-01-10', '2024-01-10', 1),
-('5124125355566307', 640, '2025-01-09', '2024-01-09', 3),
-('5206603233686013', 135, '2025-01-10', '2024-01-10', 3),
-('6373770355756415', 812, '2025-01-10', '2024-01-10', 3),
-('6377078748708380', 495, '2025-01-10', '2024-01-10', 3),
-('7431261028847230', 254, '2025-01-09', '2024-01-09', 1),
-('7502658188623832', 657, '2025-01-10', '2024-01-10', 3),
-('7862525787811538', 507, '2025-01-10', '2024-01-10', 3),
-('8452726416258427', 741, '2025-01-10', '2024-01-10', 3);
+('0323161350852826', '321', '2025-01-10', '2024-01-10', 3),
+('0731264144847107', '202', '2025-01-30', '2024-01-30', 1),
+('1644658461877238', '586', '2025-01-13', '2024-01-13', 3),
+('2304177108288457', '171', '2025-01-11', '2024-01-11', 1),
+('3871730778157768', '788', '2025-01-10', '2024-01-10', 3),
+('4827187351843667', '765', '2025-01-10', '2024-01-10', 3),
+('6646133656370511', '162', '2025-01-15', '2024-01-15', 3),
+('7455032188584186', '39', '2025-01-10', '2024-01-10', 3);
 
 -- --------------------------------------------------------
 
@@ -163,18 +164,61 @@ INSERT INTO `role` (`ID`, `Name`) VALUES
 DROP TABLE IF EXISTS `transaction`;
 CREATE TABLE IF NOT EXISTS `transaction` (
   `ID` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'Идентификатор транзакции',
-  `TransactionTypeID` int NOT NULL COMMENT 'Тип транзакции',
+  `TypeID` int NOT NULL COMMENT 'Тип транзакции',
   `BillToNumber` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Счёт получателя',
   `BillFromNumber` char(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Счёт отправителя',
-  `StatusID` int NOT NULL COMMENT 'Статус',
+  `StatusID` int DEFAULT NULL COMMENT 'Статус',
   `Amount` float UNSIGNED NOT NULL COMMENT 'Сумма перевода',
   `Date` date NOT NULL COMMENT 'Дата перевода',
+  `Sender` varchar(75) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'Логин отправителя',
   PRIMARY KEY (`ID`),
-  KEY `TransactionTypeID` (`TransactionTypeID`),
+  KEY `TransactionTypeID` (`TypeID`),
   KEY `StatusID` (`StatusID`),
   KEY `BillToNumber` (`BillToNumber`),
   KEY `BillFromNumber` (`BillFromNumber`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Дамп данных таблицы `transaction`
+--
+
+INSERT INTO `transaction` (`ID`, `TypeID`, `BillToNumber`, `BillFromNumber`, `StatusID`, `Amount`, `Date`, `Sender`) VALUES
+(32, 1, '47726413266743111841', '47726413266743111841', NULL, 12, '0000-00-00', 'Anto_Pop'),
+(33, 1, '83280100721302123130', '47726413266743111841', NULL, 13, '0000-00-00', 'Anto_Pop'),
+(40, 1, '51175573861304508410', '47726413266743111841', 1, 23, '0000-00-00', 'Anto_Pop'),
+(50, 2, '47726413266743111841', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(51, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(52, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(53, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(54, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(55, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(56, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(57, 2, '47726413266743111841', '51175573861304508410', 1, 12, '0000-00-00', 'Anto_Pop'),
+(58, 2, '51175573861304508410', '47726413266743111841', 1, 12, '0000-00-00', 'Anto_Pop'),
+(59, 2, '51175573861304508410', '47726413266743111841', 1, 234, '0000-00-00', 'Anto_Pop'),
+(60, 2, '47726413266743111841', '51175573861304508410', 1, 123, '0000-00-00', 'Anto_Pop'),
+(61, 2, '51175573861304508410', '47726413266743111841', 1, 98, '0000-00-00', 'Anto_Pop'),
+(62, 2, '51175573861304508410', '47726413266743111841', 1, 3, '0000-00-00', 'Anto_Pop'),
+(63, 2, '51175573861304508410', '47726413266743111841', 1, 34, '0000-00-00', 'Anto_Pop'),
+(64, 2, '51175573861304508410', '83280100721302123130', 1, 3, '0000-00-00', 'Anto_Pop'),
+(65, 1, '83280100721302123130', '26024237815656404106', 1, 134, '2024-01-15', 'JoBiden');
+
+--
+-- Триггеры `transaction`
+--
+DROP TRIGGER IF EXISTS `transaction_trigger_after`;
+DELIMITER $$
+CREATE TRIGGER `transaction_trigger_after` AFTER INSERT ON `transaction` FOR EACH ROW BEGIN
+UPDATE `bill` SET `Balance` = `Balance` - NEW.`Amount` WHERE `Number` = NEW.`billFromNumber`;
+UPDATE `bill` SET `Balance` = `Balance` + NEW.`Amount` WHERE `Number` = NEW.`billToNumber`;
+END
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `transaction_trigger_before_insert`;
+DELIMITER $$
+CREATE TRIGGER `transaction_trigger_before_insert` BEFORE INSERT ON `transaction` FOR EACH ROW SET NEW.`StatusID` = 1, NEW.`Date` = NOW()
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -195,9 +239,9 @@ CREATE TABLE IF NOT EXISTS `transactionstatus` (
 --
 
 INSERT INTO `transactionstatus` (`ID`, `Name`) VALUES
-(1, 'Delivered'),
-(3, 'Rejected'),
-(2, 'Waiting');
+(3, 'Доставлен'),
+(2, 'Отменён'),
+(1, 'Отправлен');
 
 -- --------------------------------------------------------
 
@@ -218,10 +262,10 @@ CREATE TABLE IF NOT EXISTS `transactiontype` (
 --
 
 INSERT INTO `transactiontype` (`ID`, `Name`) VALUES
-(3, 'Refill'),
-(1, 'Transfer'),
-(2, 'TransferBetweenBills'),
-(4, 'Withdrawal');
+(1, 'Перевод'),
+(2, 'ПереводМеждуСвоими'),
+(3, 'Пополнение'),
+(4, 'Снятие');
 
 -- --------------------------------------------------------
 
@@ -246,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   UNIQUE KEY `User_Phone_UK` (`Phone`),
   KEY `User_RoleID_FK` (`RoleID`),
   KEY `StatusID` (`StatusID`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Таблица пользователей';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='Таблица пользователей';
 
 --
 -- Дамп данных таблицы `user`
@@ -255,7 +299,19 @@ CREATE TABLE IF NOT EXISTS `user` (
 INSERT INTO `user` (`ID`, `FName`, `LName`, `MName`, `Login`, `Password`, `Phone`, `RoleID`, `StatusID`, `CreationDate`) VALUES
 (1, 'Евгений', 'Прохоров', 'Павлович', 'Ev_Pav', '26fe0cdfe99bfa306e31733c4e2b17dc', NULL, 3, 1, '0000-00-00 00:00:00'),
 (2, 'Екатерина', 'Лебедева', 'Никитична', 'Eka_Leb', '26fe0cdfe99bfa306e31733c4e2b17dc', '4294967295', 3, 1, '0000-00-00 00:00:00'),
-(3, 'Антонио', 'Попов', 'Робертович', 'Anto_Pop', '202cb962ac59075b964b07152d234b70', '+7-935-245-28-34', 3, 1, '0000-00-00 00:00:00');
+(3, 'Антонио', 'Попов', 'Робертович', 'Anto_Pop', '202cb962ac59075b964b07152d234b70', '+7-935-245-28-34', 3, 1, '0000-00-00 00:00:00'),
+(16, 'Владислав', 'Пингвинов', 'Данилович', 'vladOS', '202cb962ac59075b964b07152d234b70', '+9-234-815-34-91', 3, 1, '2024-01-10 23:13:56'),
+(17, 'Максим', 'Кабанов', 'Львович', 'JoBiden', '202cb962ac59075b964b07152d234b70', '+7-235-234-23-23', 3, 1, '2024-01-15 01:13:31'),
+(18, 'Геннадий', 'Бомбоненко', 'Романович', 'gench', '202cb962ac59075b964b07152d234b70', '+7-938-723-61-83', 3, 1, '2024-01-30 23:25:25');
+
+--
+-- Триггеры `user`
+--
+DROP TRIGGER IF EXISTS `user_trigger`;
+DELIMITER $$
+CREATE TRIGGER `user_trigger` BEFORE INSERT ON `user` FOR EACH ROW SET NEW.CreationDate = NOW()
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -288,29 +344,31 @@ INSERT INTO `userstatus` (`ID`, `Name`) VALUES
 --
 DROP VIEW IF EXISTS `v_bill`;
 CREATE TABLE IF NOT EXISTS `v_bill` (
-`Balance` float unsigned
+`Number` char(20)
+,`Balance` float unsigned
+,`Owner` varchar(50)
 ,`CardNumber` char(16)
 ,`Name` varchar(50)
-,`Number` char(20)
-,`Owner` varchar(50)
 ,`StatusID` int
 );
 
 -- --------------------------------------------------------
 
 --
--- Дублирующая структура для представления `v_transaction`
+-- Дублирующая структура для представления `v_transaction_transfer`
 -- (См. Ниже фактическое представление)
 --
-DROP VIEW IF EXISTS `v_transaction`;
-CREATE TABLE IF NOT EXISTS `v_transaction` (
-`Amount` float unsigned
+DROP VIEW IF EXISTS `v_transaction_transfer`;
+CREATE TABLE IF NOT EXISTS `v_transaction_transfer` (
+`Type` varchar(50)
 ,`BillFromNumber` char(20)
 ,`BillToNumber` char(20)
-,`Date` date
+,`Recipient` varchar(227)
+,`Amount` float unsigned
 ,`ID` int unsigned
+,`Date` date
 ,`Status` varchar(50)
-,`type` varchar(50)
+,`OwnerID` int unsigned
 );
 
 -- --------------------------------------------------------
@@ -321,16 +379,16 @@ CREATE TABLE IF NOT EXISTS `v_transaction` (
 --
 DROP VIEW IF EXISTS `v_user`;
 CREATE TABLE IF NOT EXISTS `v_user` (
-`CreationDate` datetime
+`ID` int unsigned
 ,`FName` varchar(75)
-,`ID` int unsigned
 ,`LName` varchar(75)
-,`Login` varchar(50)
 ,`MName` varchar(75)
+,`Login` varchar(50)
 ,`Password` varchar(32)
 ,`Phone` char(16)
-,`Role` varchar(100)
+,`CreationDate` datetime
 ,`StatusName` varchar(75)
+,`Role` varchar(100)
 );
 
 -- --------------------------------------------------------
@@ -346,12 +404,12 @@ CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW 
 -- --------------------------------------------------------
 
 --
--- Структура для представления `v_transaction`
+-- Структура для представления `v_transaction_transfer`
 --
-DROP TABLE IF EXISTS `v_transaction`;
+DROP TABLE IF EXISTS `v_transaction_transfer`;
 
-DROP VIEW IF EXISTS `v_transaction`;
-CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_transaction`  AS SELECT `t`.`ID` AS `ID`, `t`.`BillFromNumber` AS `BillFromNumber`, `t`.`BillToNumber` AS `BillToNumber`, `t`.`Amount` AS `Amount`, `tt`.`Name` AS `type`, `t`.`Date` AS `Date`, `ts`.`Name` AS `Status` FROM ((`transaction` `t` join `transactiontype` `tt` on((`t`.`TransactionTypeID` = `tt`.`ID`))) join `transactionstatus` `ts` on((`t`.`StatusID` = `ts`.`ID`)))  ;
+DROP VIEW IF EXISTS `v_transaction_transfer`;
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`localhost` SQL SECURITY DEFINER VIEW `v_transaction_transfer`  AS SELECT `tt`.`Name` AS `Type`, `t`.`BillFromNumber` AS `BillFromNumber`, `t`.`BillToNumber` AS `BillToNumber`, concat(`u`.`LName`,' ',`u`.`FName`,' ',`u`.`MName`) AS `Recipient`, `t`.`Amount` AS `Amount`, `t`.`ID` AS `ID`, `t`.`Date` AS `Date`, `ts`.`Name` AS `Status`, `uu`.`ID` AS `OwnerID` FROM ((((((`transaction` `t` join `transactiontype` `tt` on((`t`.`TypeID` = `tt`.`ID`))) join `transactionstatus` `ts` on((`t`.`StatusID` = `ts`.`ID`))) join `bill` `b` on((`b`.`Number` = `t`.`BillToNumber`))) join `user` `u` on((`b`.`OwnerID` = `u`.`ID`))) join `bill` `bb` on((`bb`.`Number` = `t`.`BillFromNumber`))) join `user` `uu` on((`uu`.`ID` = `bb`.`OwnerID`)))  ;
 
 -- --------------------------------------------------------
 
@@ -385,7 +443,7 @@ ALTER TABLE `card`
 -- Ограничения внешнего ключа таблицы `transaction`
 --
 ALTER TABLE `transaction`
-  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`TransactionTypeID`) REFERENCES `transactiontype` (`ID`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `transaction_ibfk_1` FOREIGN KEY (`TypeID`) REFERENCES `transactiontype` (`ID`) ON UPDATE CASCADE,
   ADD CONSTRAINT `transaction_ibfk_2` FOREIGN KEY (`StatusID`) REFERENCES `transactionstatus` (`ID`) ON UPDATE CASCADE,
   ADD CONSTRAINT `transaction_ibfk_3` FOREIGN KEY (`BillToNumber`) REFERENCES `bill` (`Number`) ON UPDATE CASCADE,
   ADD CONSTRAINT `transaction_ibfk_4` FOREIGN KEY (`BillFromNumber`) REFERENCES `bill` (`Number`) ON UPDATE CASCADE;

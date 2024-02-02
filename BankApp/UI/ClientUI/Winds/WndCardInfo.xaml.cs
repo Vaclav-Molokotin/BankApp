@@ -24,8 +24,17 @@ namespace BankApp.UI.ClientUI.Winds
         public WndCardInfo(Bill bill)
         {
             InitializeComponent();
-            
+
+            Card card = bill.Card;
+
+            string year = card.DateTo.Year.ToString();
+            string month = (card.DateTo.Month < 10)?"0":"" + card.DateTo.Month;
+
             this.bill = bill;
+            TblBillStatus.Text = bill.Status.ToString();
+            TblCardStatus.Text = card.Status.ToString();
+            TblDateTo.Text = $"{year}/{month}";
+            
             DataContext = this.bill;
         }
     }

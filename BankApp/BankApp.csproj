@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\**" />
-    <EmbeddedResource Remove="Data\**" />
-    <None Remove="Data\**" />
-    <Page Remove="Data\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Resources\Assets\Info.png" />
     <None Remove="Resources\Assets\Logo.ico" />
     <None Remove="Resources\Assets\Logo.png" />
@@ -38,6 +31,7 @@
 
   <ItemGroup>
     <Folder Include="UI\Common\Pages\" />
+    <Folder Include="Data\" />
   </ItemGroup>
 
 </Project>

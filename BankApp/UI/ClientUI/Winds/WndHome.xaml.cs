@@ -1,4 +1,6 @@
-﻿using BankApp.UI.ClientUI.Pages;
+﻿using BankApp.Libs;
+using BankApp.Models;
+using BankApp.UI.ClientUI.Pages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,9 +26,28 @@ namespace BankApp.UI.ClientUI.Windows
         const string classNamePrefix = "BankApp.UI.Client.Pages.";
 
         private bool isExit = false;
+
+        public static void UpdateInterface(WndHome wnd)
+        {
+            if(LibClient.GetBillsByClient((LibUser.CurrentUser as Client), true) is null) 
+            {
+                wnd.btnHistory.IsEnabled = false;
+                wnd.btnTransfer.IsEnabled = false;
+                wnd.btnTranferBtwBills.IsEnabled = false;
+                return; 
+            }
+
+            wnd.btnHistory.IsEnabled = true;
+            wnd.btnTransfer.IsEnabled = true;
+            wnd.btnTranferBtwBills.IsEnabled = true;
+
+            return;
+        }
+
         public WndHome()
         {
             InitializeComponent();
+            LibManager.MainFrame = frame;
             PgHome page = new PgHome();
             frame.Navigate(page);
             pageType = page.GetType();

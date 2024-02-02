@@ -114,7 +114,7 @@ namespace BankApp.Libs
         {
             if (!DB.OpenConnection())
                 return false;
-            DB.Command.CommandText = "DELETE FROM bill WHERE Number = @Number";
+            DB.Command.CommandText = "UPDATE bill SET StatusID = 3 WHERE Number = @Number";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
@@ -129,6 +129,11 @@ namespace BankApp.Libs
             return true;
         }
 
+        /// <summary>
+        /// Статический метод. Возвращает карту указанного счёта
+        /// </summary>
+        /// <param name="bill">Счёт</param>
+        /// <returns>Актуальная карта счёта</returns>
         public static Card? GetCardByBill(Bill bill)
         {
             Card card = new Card();
@@ -152,7 +157,7 @@ namespace BankApp.Libs
                 card = new Card
                 {
                     Number = DB.ConvertFromDBVal<string>(row.ItemArray[0]),
-                    CVC = DB.ConvertFromDBVal<uint>(row.ItemArray[1]),
+                    CVC = DB.ConvertFromDBVal<string>(row.ItemArray[1]),
                     DateTo = DB.ConvertFromDBVal<DateTime>(row.ItemArray[2]),
                     DateFrom = DB.ConvertFromDBVal<DateTime>(row.ItemArray[3]),
                     Status = DB.ConvertFromDBVal<CardStatus>(row.ItemArray[4])
@@ -163,7 +168,91 @@ namespace BankApp.Libs
             }
             else
             {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Статический метод. Возвращает счёт по его номеру
+        /// </summary>
+        /// <param name="number">Счёт</param>
+        /// <returns>Счёт</returns>
+        public static Bill? GetBillByNumber(string number)
+        {
+            if (!DB.OpenConnection())
+                return null;
+            DB.Command.CommandText = "SELECT * FROM bill WHERE Number = @number;";
+            DB.Command.Connection = DB.GetConnection();
+            DB.Command.Parameters.Clear();
+
+            DB.Command.Parameters.Add("@number", MySqlDbType.VarChar).Value = number;
+
+            DB.Adapter.SelectCommand = DB.Command;
+            DB.Adapter.Fill(DB.Table);
+
+            DB.CloseConnection();
+
+            
+            if (DB.Table.Rows.Count > 0)
+            {
+                DataRow row = DB.Table.Rows[0];
+                Bill bill = new Bill
+                {
+                    Number = DB.ConvertFromDBVal<string>(row.ItemArray[0]),
+                    Balance = DB.ConvertFromDBVal<float>(row.ItemArray[1]),
+                    Owner = DB.ConvertFromDBVal<string>(row.ItemArray[2]),
+                    CardNumber = DB.ConvertFromDBVal<string>(row.ItemArray[3]),
+                    Name = DB.ConvertFromDBVal<string>(row.ItemArray[4]),
+                    Status = DB.ConvertFromDBVal<BillStatus>(row.ItemArray[5])
+                };
+
                 DB.Table.Clear();
+                return bill;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Статический метод. Возвращает счёт по указанной карте
+        /// </summary>
+        /// <param name="card"></param>
+        /// <returns></returns>
+        public static Bill? GetBillByCard(Card card)
+        {
+            if (!DB.OpenConnection())
+                return null;
+            DB.Command.CommandText = "SELECT * FROM bill WHERE CardNumber = @CardNumber;";
+            DB.Command.Connection = DB.GetConnection();
+            DB.Command.Parameters.Clear();
+
+            DB.Command.Parameters.Add("@CardNumber", MySqlDbType.VarChar).Value = card.Number;
+
+            DB.Adapter.SelectCommand = DB.Command;
+            DB.Adapter.Fill(DB.Table);
+
+            DB.CloseConnection();
+
+            DataRow row = DB.Table.Rows[0];
+            if (DB.Table.Rows.Count > 0)
+            {
+                Bill bill = new Bill
+                {
+                    Number = DB.ConvertFromDBVal<string>(row.ItemArray[0]),
+                    Balance = DB.ConvertFromDBVal<float>(row.ItemArray[1]),
+                    Owner = DB.ConvertFromDBVal<string>(row.ItemArray[2]),
+                    CardNumber = DB.ConvertFromDBVal<string>(row.ItemArray[3]),
+                    Name = DB.ConvertFromDBVal<string>(row.ItemArray[4]),
+                    Status = DB.ConvertFromDBVal<BillStatus>(row.ItemArray[5])
+                };
+
+                DB.Table.Clear();
+                return bill;
+            }
+            else
+            {
                 return null;
             }
         }

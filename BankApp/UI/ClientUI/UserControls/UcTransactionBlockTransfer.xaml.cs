@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BankApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,19 +21,13 @@ namespace BankApp.UI.ClientUI.UserControls
     /// </summary>
     public partial class UcTransactionBlock : UserControl
     {
-        public string TransactionType { get; set; }
-        public string BillTo { get; set; }
-        public string BillFrom { get; set; }
-        public string FullName { get; set; }    
-        public string Amount { get; set; }
-        public string TransactionID { get; set; }
-        public string Data { get; set; }
-        public string Status { get; set; }
+        public TransactionTransferView transaction;
         
-        public UcTransactionBlock()
+        public UcTransactionBlock(TransactionTransferView transaction)
         {
+            this.transaction = transaction;
             InitializeComponent();
-            DataContext = this;
+            DataContext = this.transaction;
         }
     }
 }

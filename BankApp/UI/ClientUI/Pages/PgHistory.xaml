@@ -8,7 +8,8 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Банк - История транзакций">
 
-    <StackPanel>
-        <usercontrols:UcTransactionBlock TransactionType="Говно мамонта" BillTo="Гена" BillFrom="Генч" FullName="Насрал Евгеньевич" Amount="0" TransactionID="12" Data="12/12/2012" Status="Готово"></usercontrols:UcTransactionBlock>
-    </StackPanel>
+    <ScrollViewer>
+        <StackPanel x:Name="SpTransactions">
+        </StackPanel>
+    </ScrollViewer>
 </Page>

@@ -34,7 +34,10 @@
             <Button DockPanel.Dock="Top" x:Name="BtnOpenBill" Click="BtnOpenBill_Click">Открыть счёт</Button>
             <Button DockPanel.Dock="Top" x:Name="BtnCloseBill" Click="BtnCloseBill_Click">Закрыть счёт</Button>
             <CheckBox DockPanel.Dock="Bottom" x:Name="ChbxHistorySettings" Click="ChbxHistorySettings_Clicked">История транзакций по выбранному счёту</CheckBox>
-            <Button DockPanel.Dock="Bottom" x:Name="History">*История*</Button>
+            <ScrollViewer>
+                <StackPanel Orientation="Vertical" x:Name="SpTransactions" CanVerticallyScroll="True">
+                </StackPanel>
+            </ScrollViewer>
         </DockPanel>
     </Grid>
 </Page>
