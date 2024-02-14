@@ -28,13 +28,15 @@ namespace BankApp.UI.ClientUI.Pages
     /// </summary>
     public partial class PgHome : Page
     {
-        private int antiRecursion = 0;
+        private bool antiRecursion = false;
+        //private int antiRecursion = 0;
         private int selectedBill = 0;
 
         public PgHome()
         {
             InitializeComponent();
             downloadBills();
+            ImgInfo.Source = LibImage.GetImageSource($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/BankApp/Resources/Assets/Info.png");
 
             Setting setting = GetSetting(Settings.MainBill);
             string? mainBillNumber = setting?.Value;
@@ -134,6 +136,7 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void downloadBills()
         {
+            antiRecursion = true;
             WndHome.UpdateInterface((LibManager.MainFrame.Parent as Grid).Parent as WndHome);
             Setting setting = GetSetting(Settings.SeeAllBills);
 
@@ -154,22 +157,13 @@ namespace BankApp.UI.ClientUI.Pages
             {
                 foreach (Bill bill in (user as Client).Bills)
                 {
-                    bool isRepeat = false;
-                    for (int i = 0; i < CmbxBills.Items.Count; i++)
-                    {
-                        if (bill.Number == (CmbxBills.Items[i] as Bill).Number)
-                            isRepeat = true;
-                    }
-                    if (!isRepeat)
-                    {
-                        if (!bool.Parse(setting.Value) && bill.Status == BillStatus.Закрыт)
-                            continue;
+                    if (!bool.Parse(setting.Value) && bill.Status == BillStatus.Закрыт)
+                        continue;
 
-                        CmbxBills.Items.Add(bill);
-                    }
+                    CmbxBills.Items.Add(bill);
                 }
             }
-
+            antiRecursion = false;
             setInterface();
         }
 
@@ -178,8 +172,8 @@ namespace BankApp.UI.ClientUI.Pages
             WndCloseBill wnd = new WndCloseBill();
             if (wnd.ShowDialog() is not null)
             {
-                if((LibUser.CurrentUser as Client).Bills.Count != 0)
-                    antiRecursion--;
+                /*  if((LibUser.CurrentUser as Client).Bills.Count != 0)
+                      antiRecursion--;*/
                 downloadBills();
             }
         }
@@ -194,7 +188,7 @@ namespace BankApp.UI.ClientUI.Pages
             if (LibBill.AddBill(LibUser.CurrentUser))
             {
                 MessageBox.Show("Счёт создан!");
-                antiRecursion--;
+                // antiRecursion--;
                 downloadBills();
             }
             else
@@ -260,13 +254,10 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void CmbxBills_Selected(object sender, RoutedEventArgs e)
         {
-            if (antiRecursion <= 0)
+            if (!antiRecursion)
             {
-                antiRecursion += 2;
                 downloadBills();
             }
-            else
-                antiRecursion--;
         }
 
         private void ImgInfo_MouseDown(object sender, MouseButtonEventArgs e)

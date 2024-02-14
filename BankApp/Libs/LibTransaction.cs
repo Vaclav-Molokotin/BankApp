@@ -27,11 +27,11 @@ namespace BankApp.Libs
             if (!DB.OpenConnection())
                 return null;
 
-            DB.Command.CommandText = "SELECT * FROM v_transaction_transfer WHERE OwnerID = @OwnerID;";
+            DB.Command.CommandText = "SELECT * FROM v_transaction_transfer WHERE SenderID = @UserID OR RecipientID = @UserID;";
             DB.Command.Connection = DB.GetConnection();
             DB.Command.Parameters.Clear();
 
-            DB.Command.Parameters.Add("@OwnerID", MySqlDbType.UInt32).Value = client.Id;
+            DB.Command.Parameters.Add("@UserID", MySqlDbType.UInt32).Value = client.Id;
 
             DB.Adapter.SelectCommand = DB.Command;
             DataTable dataTable = new DataTable();

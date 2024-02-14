@@ -30,6 +30,8 @@ namespace BankApp.UI.ClientUI.Winds
         {
             InitializeComponent();
             downloadSettings();
+
+            Icon = LibImage.GetImageSource(App.IconPath);
         }
 
         private void downloadSettings()
@@ -126,7 +128,7 @@ namespace BankApp.UI.ClientUI.Winds
         {
             Close();
         }
-
+        
         async Task savingSettings()
         {
             SpContent.IsEnabled = false;

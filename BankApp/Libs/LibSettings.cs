@@ -15,7 +15,7 @@ namespace BankApp.Libs
     public static class LibSettings
     {
         // Путь к файлу настроек
-        private static readonly string settingsPath = "../../../Data/Settings.xml";
+        private static readonly string settingsPath = $"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/BankApp/Data/Settings.xml";
 
         // Шаблон настроек
         private static List<Setting> settingsTemplate = new List<Setting>

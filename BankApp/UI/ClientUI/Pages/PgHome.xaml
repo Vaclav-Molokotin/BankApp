@@ -24,7 +24,7 @@
 
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal">
                 <TextBlock x:Name="TblCard">Карта не привязана</TextBlock>
-                <Image x:Name="ImgInfo" Source="/Resources/Assets/Info.png" Width="40" MouseDown="ImgInfo_MouseDown" Cursor="Hand"></Image>
+                <Image x:Name="ImgInfo" Width="40" MouseDown="ImgInfo_MouseDown" Cursor="Hand" Source="/Resources/Assets/Info.png"></Image>
             </StackPanel>
             
             <TextBlock FontSize="20" DockPanel.Dock="Bottom" x:Name="TblBalance">Ваш баланс:</TextBlock>            

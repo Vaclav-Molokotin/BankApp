@@ -51,6 +51,7 @@ namespace BankApp.UI.ClientUI.Windows
             PgHome page = new PgHome();
             frame.Navigate(page);
             pageType = page.GetType();
+            Icon = LibImage.GetImageSource(App.IconPath);
         }
 
         private void btnHome_Click(object sender, RoutedEventArgs e)

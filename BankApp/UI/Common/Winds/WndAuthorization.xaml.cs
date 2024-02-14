@@ -30,12 +30,14 @@ namespace BankApp
         public WndAuthorization()
         {
             InitializeComponent();
+            Icon = LibImage.GetImageSource(App.IconPath);
+            ImgLogo.Source = LibImage.GetImageSource($"{Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}/BankApp/Resources/Assets/Logo.png");
         }
 
         private void BtnAuthorize_Click(object sender, RoutedEventArgs e)
         {
             User? user = authorize();
-            
+
             if (user is not null)
             {
                 if (user.Role == UserRole.Клиент)
@@ -43,11 +45,11 @@ namespace BankApp
                     user = new Client(user);
                     LibUser.CurrentUser = user;
                     WndHome wnd = new WndHome();
-                   
+
                     wnd.Owner = this;
                     wnd.Show();
                     Hide();
-                }                              
+                }
             }
             else
             {
@@ -58,8 +60,8 @@ namespace BankApp
         private User? authorize()
         {
             User? result;
-            if(chbxShowPassword.IsChecked == true)
-               result = LibUser.GetUserByLogopas(tbLogin.Text, tbPassword.Text);
+            if (chbxShowPassword.IsChecked == true)
+                result = LibUser.GetUserByLogopas(tbLogin.Text, tbPassword.Text);
             else
                 result = LibUser.GetUserByLogopas(tbLogin.Text, pwbxPassword.Password);
             return result;
@@ -67,7 +69,7 @@ namespace BankApp
 
         private void chbxShowPassword_Click(object sender, RoutedEventArgs e)
         {
-            if(chbxShowPassword.IsChecked == true)
+            if (chbxShowPassword.IsChecked == true)
             {
                 tbPassword.Text = pwbxPassword.Password;
                 pwbxPassword.Visibility = Visibility.Collapsed;
@@ -83,7 +85,7 @@ namespace BankApp
 
         private void Password_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.Key.ToString() == "Return")
+            if (e.Key.ToString() == "Return")
             {
                 User? result = authorize();
                 if (result is not null)
@@ -103,7 +105,7 @@ namespace BankApp
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
             WndRegistration wnd = new WndRegistration();
-            wnd.Owner = this; 
+            wnd.Owner = this;
             wnd.Show();
             Hide();
         }

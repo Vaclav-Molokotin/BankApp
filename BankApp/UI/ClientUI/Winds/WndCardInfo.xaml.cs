@@ -1,4 +1,5 @@
-﻿using BankApp.Models;
+﻿using BankApp.Libs;
+using BankApp.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,8 @@ namespace BankApp.UI.ClientUI.Winds
             TblDateTo.Text = $"{year}/{month}";
             
             DataContext = this.bill;
+
+            Icon = LibImage.GetImageSource(App.IconPath);
         }
     }
 }

@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:BankApp"
         mc:Ignorable="d"
         Title="Авторизация"
-        Icon="/Resources/Assets/Logo.ico"
         Height="550" Width="800"
         MinHeight="550" MinWidth="800"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="10*"></RowDefinition>
@@ -26,7 +26,7 @@
         
         <StackPanel Grid.Column="1" Grid.Row="1">
 
-            <Image Source="/Resources/Assets/Logo.png" Stretch="Fill"></Image>
+            <Image x:Name="ImgLogo" Stretch="Fill"></Image>
             
             <Label>Авторизация</Label>
             

@@ -25,7 +25,8 @@ namespace BankApp.UI.ClientUI.Winds
         {          
             InitializeComponent();
             downloadBills();
-            CmbxBills.SelectedIndex = 0;            
+            CmbxBills.SelectedIndex = 0;
+            Icon = LibImage.GetImageSource(App.IconPath);
         }
 
         private void downloadBills()

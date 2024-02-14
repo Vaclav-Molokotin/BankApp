@@ -23,14 +23,18 @@ namespace BankApp.UI.ClientUI.Pages
     /// </summary>
     public partial class PgTransferBtwBills : Page
     {
+        private bool antiRecursion = false;
         public PgTransferBtwBills()
         {
             InitializeComponent();
             downloadBills();
+            updateBalance(CmbxBillFrom, TblBalanceFrom);
+            updateBalance(CmbxBillTo, TblBalanceTo);
         }
 
         private void downloadBills()
         {
+            antiRecursion = true;
             CmbxBillFrom.Items.Clear();
             CmbxBillTo.Items.Clear();
             List<Bill> bills = LibClient.GetBillsByClient(LibUser.CurrentUser as Client);
@@ -45,27 +49,33 @@ namespace BankApp.UI.ClientUI.Pages
             }
             CmbxBillFrom.SelectedIndex = 0;
             CmbxBillTo.SelectedIndex = 0;
+
+            antiRecursion = false;
         }
 
         private void BtnTransfer_Click(object sender, RoutedEventArgs e)
         {
-            if((CmbxBillFrom.SelectedItem as Bill).Number == (CmbxBillTo.SelectedItem as Bill).Number)
+            if ((CmbxBillFrom.SelectedItem as Bill).Number == (CmbxBillTo.SelectedItem as Bill).Number)
             {
                 MessageBox.Show("Вы не можете перевести деньги на такой же счёт!");
-                downloadBills();
                 return;
             }
+
 
             Transaction? transaction;
             float amount = float.Parse(TbxAmount.Text);
             Bill billFrom = CmbxBillFrom.SelectedItem as Bill;
-
+            if(amount <= 0)
+            {
+                MessageBox.Show("Сумма перевода должна быть больше нуля!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
             if (amount > billFrom.Balance)
             {
                 MessageBox.Show("Недостаточно средств!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-                transaction = transferByBill();
+            transaction = transferByBill();
 
             if (transaction == null)
                 return;
@@ -103,6 +113,7 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void CmbxBillFrom_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+
             updateBalance(CmbxBillFrom, TblBalanceFrom);
         }
 
@@ -118,6 +129,8 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void updateBalance(ComboBox combobox, TextBlock textBlock)
         {
+            if (antiRecursion)
+                return;
             try
             {
                 Bill bill = combobox.SelectedItem as Bill;
@@ -131,7 +144,7 @@ namespace BankApp.UI.ClientUI.Pages
 
         private void CmbxBillTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            updateBalance(CmbxBillTo, TblBalanceTo);           
+            updateBalance(CmbxBillTo, TblBalanceTo);
         }
     }
 }

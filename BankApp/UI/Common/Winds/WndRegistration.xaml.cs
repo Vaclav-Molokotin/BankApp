@@ -36,7 +36,7 @@ namespace BankApp.UI.Common.Winds
                 TblPasswordError,
                 TblPhoneError
             };
-
+            //Icon = LibImage.GetImageSource(App.IconPath);
             ErrorBlocks = errorBlocks;
         }
 
